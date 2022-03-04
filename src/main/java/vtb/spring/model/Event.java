@@ -8,6 +8,8 @@ public class Event {
     private Date eventDate;
     private Integer total;
     private Integer available;
+    private String status;
+    private String comment;
 
     public Event(Opera opera, Date eventDate) {
         this.opera = opera;
@@ -19,6 +21,15 @@ public class Event {
         this.eventDate = eventDate;
         this.total = total;
         this.available = available;
+        this.status = "Актуально";
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Opera getOpera() {
@@ -51,5 +62,13 @@ public class Event {
 
     public void setAvailable(Integer available) {
         this.available = available;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

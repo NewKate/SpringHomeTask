@@ -20,12 +20,58 @@ public class OperaSalesApplication {
 
         final ConfigurableApplicationContext ctx = SpringApplication.run(OperaSalesApplication.class, args);
 
+        fillData(ctx);
+        //startHM1(ctx);
 
-        ctx.getBean(OperaService.class).addOpera("Валькирия");
-        ctx.getBean(OperaService.class).addOpera("Борис Годунов");
+        HashMap<String, Event> eventList = ctx.getBean(OperaService.class).getEventList();
+
+        String date_s = " 2022-02-02 19:00";
+        SimpleDateFormat dt = new SimpleDateFormat("yyyyy-MM-dd hh:mm");
+        Date date = dt.parse(date_s);
+
+        Ticket t = ctx.getBean(OperaService.class).buyTicket(eventList.get("Князь Игорь" + date.toString()), date, 1, 1);
+        t = ctx.getBean(OperaService.class).buyTicket(eventList.get("Князь Игорь" + date.toString()), date, 1, 2);
+        t = ctx.getBean(OperaService.class).buyTicket(eventList.get("Князь Игорь" + date.toString()), date, 1, 3);
+
+
+        ctx.getBean(OperaService.class).getAnnouncement("Князь Игорь", date);
+
+        String date_s2 = " 2022-03-03 19:00";
+        Date date2 = dt.parse(date_s2);
+
+        ctx.getBean(OperaService.class).changeEventDate("Князь Игорь", date, date2);
+
+        HashMap<String, Event> actualEventList = ctx.getBean(OperaService.class).getActualEventList();
+        for (Event event : actualEventList.values()) {
+            printEvent(event);
+        }
+    }
+
+
+
+    public static void fillData(ConfigurableApplicationContext ctx) throws ParseException {
+        ctx.getBean(OperaService.class).addOpera("Валькирия", 16, "Премьера");
+        ctx.getBean(OperaService.class).addOpera("Борис Годунов", 16, "Постоянный репертуар");
         ctx.getBean(OperaService.class).addOpera("Кармен", 12, "Постоянный репертуар");
         ctx.getBean(OperaService.class).addOpera("Травиата", 12, "Премьера");
         ctx.getBean(OperaService.class).addOpera("Князь Игорь", 12, "Премьера");
+
+        HashMap<String, Opera> currentOperas = ctx.getBean(OperaService.class).getOperaList();
+
+        String date_s = " 2022-01-01 19:00";
+        SimpleDateFormat dt = new SimpleDateFormat("yyyyy-MM-dd hh:mm");
+        Date date = dt.parse(date_s);
+
+        ctx.getBean(OperaService.class).addEvent(currentOperas.get("Травиата"), date, 350, 350);
+
+        date_s = " 2022-02-02 19:00";
+        date = dt.parse(date_s);
+
+        ctx.getBean(OperaService.class).addEvent(currentOperas.get("Князь Игорь"), date, 500, 500);
+
+    }
+
+    public static void startHM1(ConfigurableApplicationContext ctx) throws ParseException {
 
         Opera opera = ctx.getBean(OperaService.class).getOperaByName("Князь Игорь");
         printOpera(opera);
@@ -50,25 +96,14 @@ public class OperaSalesApplication {
             printOpera(operaFromList);
         }
 
-        String date_s = " 2022-01-01 19:00";
-        SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm");
-        Date date = dt.parse(date_s);
-
-        printOpera(operaList.get("Травиата"));
-
-        ctx.getBean(OperaService.class).addEvent(operaList.get("Травиата"), date, 350, 350);
-
-        date_s = " 2022-02-02 19:00";
-        date = dt.parse(date_s);
-
-        printOpera(operaList.get("Князь Игорь"));
-
-        ctx.getBean(OperaService.class).addEvent(operaList.get("Князь Игорь"), date, 500, 500);
-
         HashMap<String, Event> eventList = ctx.getBean(OperaService.class).getEventList();
         for (Event event : eventList.values()) {
             printEvent(event);
         }
+
+        String date_s = " 2022-02-02 19:00";
+        SimpleDateFormat dt = new SimpleDateFormat("yyyyy-MM-dd hh:mm");
+        Date date = dt.parse(date_s);
 
         printEvent(eventList.get("Князь Игорь" + date.toString()));
 
@@ -83,7 +118,6 @@ public class OperaSalesApplication {
         ctx.getBean(OperaService.class).returnTicket(t);
 
         printEvent(eventList.get("Князь Игорь" + date.toString()));
-
 
     }
 
